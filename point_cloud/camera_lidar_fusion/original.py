@@ -186,9 +186,9 @@ def o3d_points_to_rgbd(points, colors, height, width, intrinsic, extrinsic):
 
 
 if __name__ == '__main__': 
-    image_path = '../data/image_2/000007.png'
-    bin_path = '../data/velodyne/000007.bin'
-    calib_path = '../data/calib/000007.txt'
+    image_path = '../data/image_2/000043.png'
+    bin_path = '../data/velodyne/000043.bin'
+    calib_path = '../data/calib/000043.txt'
     point_in_lidar = read_bin(bin_path)
     color_image = cv2.cvtColor(cv2.imread(image_path), cv2.COLOR_BGR2RGB)
     _, _, P2, _, R0, lidar2camera_matrix, _ = read_calib(calib_path)
@@ -211,7 +211,8 @@ if __name__ == '__main__':
     app = pg.mkQApp('main')
     widget = gl.GLViewWidget()
     point_size = np.zeros(new_points.shape[0], dtype=np.float16) + 0.1
-    new_points[:, 2] += 80  # Raise the rendered point cloud on the Z-axis
+    # new_points[:, 2] += 10  # Raise the rendered point cloud on the Z-axis
+    
     points_item1 = gl.GLScatterPlotItem(pos=new_points, size=point_size, color=colors, pxMode=False)
     
     # Adding the unrendered lidar point cloud
@@ -224,6 +225,6 @@ if __name__ == '__main__':
 
     # Adding the unrendered point cloud to the view, placing it above the rendered point cloud
     widget.addItem(points_item2)
-    widget.addItem(points_item1)
+    # widget.addItem(points_item1)
     widget.show()
     pg.exec()
