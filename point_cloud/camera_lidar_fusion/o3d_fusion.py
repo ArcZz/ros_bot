@@ -206,24 +206,23 @@ if __name__ == '__main__':
     new_points, colors = o3d_rgbd_to_points(color_image, depth1, intrinsic, extrinsic)
     color_image, depth2 = o3d_points_to_rgbd(new_points, colors, height, width, intrinsic, extrinsic)
     colored_depth = get_colored_depth(depth2)
-
-    # 雷达点云显示
+    
+    # Displaying the lidar point cloud
     app = pg.mkQApp('main')
     widget = gl.GLViewWidget()
     point_size = np.zeros(new_points.shape[0], dtype=np.float16) + 0.1
-    new_points[:, 2] += 80  # 将渲染后的点云在 Z 轴方向上提高
+    new_points[:, 2] += 80  # Raise the rendered point cloud on the Z-axis
     points_item1 = gl.GLScatterPlotItem(pos=new_points, size=point_size, color=colors, pxMode=False)
     
-    
-    # 添加未渲染的雷达点云
-    # 假设 point_in_lidar 是未经任何处理的原始点云位置数据
-    # 使用默认颜色（可以选择白色或其他颜色）
+    # Adding the unrendered lidar point cloud
+    # Assuming point_in_lidar is the raw point cloud positional data
+    # Using a default color (choice of darker gray or other colors)
     point_size_unrendered = np.zeros(point_in_lidar.shape[0], dtype=np.float16) + 0.1
-    unrendered_color = np.full((point_in_lidar.shape[0], 4), [0.5, 0.5, 0.5, 1.0])  # 较暗的灰色，透明度
+    unrendered_color = np.full((point_in_lidar.shape[0], 4), [0.5, 0.5, 0.5, 1.0])  # Dark gray, opacity 1.0
 
     points_item2 = gl.GLScatterPlotItem(pos=point_in_lidar, size=point_size_unrendered, color=unrendered_color, pxMode=False)
 
-    # 将未渲染的点云添加到视图，放置在渲染点云之上
+    # Adding the unrendered point cloud to the view, placing it above the rendered point cloud
     widget.addItem(points_item2)
     widget.addItem(points_item1)
     widget.show()
