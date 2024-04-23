@@ -14,9 +14,9 @@ cmap = plt.cm.jet
 
 def get_colored_depth(depth):
     """
-    渲染深度图, depth_colorize函数的封装
+    Renders the depth map, a wrapper function for depth_colorize
     :param depth:  numpy.ndarray `H x W`
-    :return:       numpy.ndarray `H x W x C'  RGB
+    :return:       numpy.ndarray `H x W x C`  RGB
     """
     if len(depth.shape) == 3:
         depth = depth.squeeze()
@@ -27,9 +27,9 @@ def get_colored_depth(depth):
 
 def depth_colorize(depth):
     """
-    深度图着色渲染
+    Color rendering of the depth map
     :param depth: numpy.ndarray `H x W`
-    :return: numpy.ndarray `H x W x C'  RGB
+    :return: numpy.ndarray `H x W x C`  RGB
     example:
     n = np.arange(90000).reshape((300, 300))
     colored = depth_colorize(n).astype(np.uint8)
@@ -46,16 +46,16 @@ def depth_colorize(depth):
 
 def read_calib(calib_path):
     """
-    读取kitti数据集标定文件
-    下载的彩色图像是左边相机的图像, 所以要用P2
+    Reads calibration files from the KITTI dataset
+    The downloaded color image is from the left camera, so P2 is used
     extrinsic = np.matmul(R0, lidar2camera)
     intrinsic = P2
-    P中包含第i个相机到0号摄像头的距离偏移(x方向)
-    extrinsic变换后的点云是投影到编号为0的相机(参考相机)坐标系中并修正后的点
-    intrinsic(P2)变换后可以投影到左边相机图像上
-    P0, P1, P2, P3分别代表左边灰度相机，右边灰度相机，左边彩色相机，右边彩色相机
+    P contains the offset (in x direction) of camera i from camera 0
+    Extrinsic transformed point cloud is projected into camera 0's (reference camera) coordinate system after correction
+    Intrinsic (P2) transformed can be projected onto the left camera image
+    P0, P1, P2, P3 represent left grayscale camera, right grayscale camera, left color camera, right color camera respectively
     :return: P0-P3 numpy.ndarray           `3 x 4`
-             R0 numpy.ndarray              `4 x 4`
+             R0 numpy.ndarray              `3 x 4`
              lidar2camera numpy.ndarray    `4 x 4`
              imu2lidar numpy.ndarray       `4 x 4`
 
@@ -77,7 +77,6 @@ def read_calib(calib_path):
     imu2lidar_m = np.array(list(map(float, raw[6].split()[1:]))).reshape((3, 4))
     imu2lidar_m = np.vstack((imu2lidar_m, np.array([0, 0, 0, 1])))
     return P0, P1, P2, P3, R0, lidar2camera_m, imu2lidar_m
-
 
 
 def read_bin(bin_path, intensity=False):
